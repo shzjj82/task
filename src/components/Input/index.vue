@@ -29,10 +29,10 @@ export default Vue.extend({
       type: String,
       default: "",
     },
-    task:{
-      default:()=>({}),
-      type:Object
-    }
+    task: {
+      default: () => ({}),
+      type: Object,
+    },
   },
   computed: {
     normalizeAction(): (
