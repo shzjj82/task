@@ -1,32 +1,73 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <MenuComponent :basic="basic" @command="command" :advance="advance">
+      <el-button type="primary">菜单</el-button>
+    </MenuComponent>
+    <ConditionsComponent />
+    <TaskView />
   </div>
 </template>
-
+<script lang="ts">
+import Vue from "vue";
+import MenuComponent from "@/components/Menu/index.vue";
+import ConditionsComponent from "@/components/Conditions/index.vue";
+import TaskView from "@/views/Task.vue";
+import { get } from "lodash";
+export default Vue.extend({
+  name: "app",
+  components: {
+    MenuComponent,
+    ConditionsComponent,
+    TaskView,
+  },
+  data() {
+    return {
+      basic: {
+        title: "Essentials",
+        children: [
+          [
+            { label: "Status" },
+            { label: "TimeLine" },
+            { label: "Date", command: "setDate" },
+          ],
+          [
+            { label: "People" },
+            { label: "Files" },
+            { label: "Dropdown", command: "setDropdown" },
+          ],
+        ],
+      },
+      advance: {
+        title: "Super Useful",
+        children: [
+          { label: "advanceStatus", command: "setStatus" },
+          { label: "advanceTimeLine", command: "setTimeLine" },
+          { label: "advanceDate", command: "setDate" },
+          { label: "advancePeople", command: "setPeople" },
+          { label: "advanceFiles", command: "setFiles" },
+          { label: "advanceDropdown", command: "setDropdown" },
+        ],
+      },
+    };
+  },
+  computed: {
+    getConfigurations() {
+      const configurations = this.$store.getters["task/configurations"];
+      return (key: string) => get(configurations, key);
+    },
+    columns(): unknown[] {
+      return this.getConfigurations("columns");
+    },
+  },
+  methods: {
+    command(name: string) {
+      console.log(name);
+    },
+  },
+});
+</script>
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+body {
+  font-family: "Roboto", helvetica, arial, sans-serif;
 }
 </style>
